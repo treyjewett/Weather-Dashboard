@@ -1,0 +1,30 @@
+#header {
+    background-color: rgb(44, 44, 44);
+    height: 100px;
+    text-align: center;
+}
+
+#title {
+    color: white;
+    padding-top: 1%;
+}
+
+.col-3 {
+    height: 100vh;
+    background-color: rgb(243, 243, 243);
+}
+
+#city-search {
+    padding-top: 10px;
+}
+
+#input {
+    width: 60%;
+    height: 4%;
+}
+
+#btn {
+    width: 10%;
+    height: 4%;
+    background-color: green;
+}
