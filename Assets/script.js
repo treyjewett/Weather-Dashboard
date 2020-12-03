@@ -20,20 +20,22 @@ function getWeather(city) {
     $.ajax({
         url: weatherURL,
         method: 'GET',
-    }).then(function(weatherResponse) {
-    })
-}
+    }).then(function (weatherResponse) {
+        weather = weatherResponse;
+        console.log(weather);
+        cityNameEl.text(weather.name);
+        var temp = 
 
-// create the function to fetch the uv index for the location of the weather.
-function getUV(lon, lat) {
-    var uvURL = 'http://api.openweathermap.org/data/2.5/uvi?lat=' + lat + '&lon=' + lon + '&appid=' + apiKey;
-    $.ajax({
-        url: uvURL,
-        method: 'GET'
-    }).then(function(uvResponse) {
-        console.log('UV: ', uvResponse);
-        console.log('UV Index: ', uvResponse.value);
-        return uvResponse;
+        var lon = weather.coord.lon;
+        var lat = weather.coord.lat;
+        var uvURL = 'http://api.openweathermap.org/data/2.5/uvi?lat=' + lat + '&lon=' + lon + '&appid=' + apiKey;
+        $.ajax({
+            url: uvURL,
+            method: 'GET'
+        }).then(function (uvResponse) {
+            console.log('UV: ', uvResponse);
+            console.log('UV Index: ', uvResponse.value);
+        })
     })
 }
 
@@ -43,7 +45,7 @@ function getForecast(city) {
     $.ajax({
         url: forecastURL,
         method: 'GET'
-    }).then(function(forecastResponse) {
+    }).then(function (forecastResponse) {
         // var fiveDayResponse = fiveDayForcast(response);
         console.log('Forecast: ', forecastResponse);
         return forecastResponse;
@@ -61,14 +63,9 @@ function fiveDayForcast(response) {
 
 
 
-$('#btn').on('click', function() {
+$('#btn').on('click', function () {
     var city = $('#input').val();
     console.log($('#input').val());
-    var weather = getWeather(city);
-    console.log(weather);
-    var uv = getUV(weather.coord.lon, weather.coord.lat);
-    console.log(uv);
-    var forecast = getForecast(city);
-    console.log(forecast);
-    cityNameEl.text(weather.name);
+    getWeather(city);
+    getForecast(city);
 })
