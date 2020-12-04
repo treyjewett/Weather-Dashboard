@@ -76,7 +76,6 @@ $('#btn').on('click', function () {
     getForecast(city);
 })
 
-// Still needs work. Will not populate the page with weather data when clicked.
 $('#previousSearch').on('click', function () {
     var newCity = $('#cityButton');
     getWeather(newCity);
