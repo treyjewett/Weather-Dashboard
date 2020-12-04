@@ -38,3 +38,14 @@
     border-radius: 3px;
     margin-bottom: 20px;
 }
+
+#forecastDisplay {
+    display: flex;
+    flex-wrap: no-wrap;
+    flex-direction: row;
+    padding: 3px;
+}
+
+#cardContainer {
+    background-color: lightblue;
+}
