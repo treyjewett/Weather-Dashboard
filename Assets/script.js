@@ -44,12 +44,21 @@ function getForecast(city) {
         method: 'GET'
     }).then(function (forecastResponse) {
         console.log(forecastResponse);
-        // logic for getting 5 day forecast
-        for (i = 0; i < forecastResponse.list.length; i += 8) {
-
-        }
         var forecast = forecastResponse;
-        console.log(forecast);
+        // logic for getting 5 day forecast
+        for (i = 2; i < forecast.list.length; i += 8) {
+            var card = $('<div class="col-2">');
+            var day = $('<h4>');
+            var dayTemp = $('<p>');
+            var dayHumidity = $('<p>');
+            tempK = forecast.list[i].main.temp;
+            day.text(forecast.list[i].dt);
+            dayTemp.text('Temp: ' + ((tempK - 273.15) * (9/5) + 32).toFixed(0));
+            dayHumidity.text('Humidity: ' + forecast.list[i].main.humidity + '%');
+            card.append(day, dayTemp, dayHumidity);
+            $('#forecast').append(card);
+            console.log(i);
+        }
     })
 }
 
