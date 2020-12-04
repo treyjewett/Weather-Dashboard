@@ -12,7 +12,7 @@ Everyone has the occasional need to check the weather. Between planning days to 
 <img src="Assets\Images\Screenshot.png" alt="Weather Dashboard">
 <p>
 
-<a href="" target="_blank">Click here to view the Weather Dashboard!</a>
+<a href="https://treyjewett.github.io/Weather-dashboard/" target="_blank">Click here to view the Weather Dashboard!</a>
 
 ## Code Utilized
 
