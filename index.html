@@ -23,17 +23,27 @@
                 <h3 id="city-search">Search for a City:</h3>
                 <input id="input" type="text" placeholder="City"></input>
                 <button id="btn" type="button"><i class="fa fa-search"></i></button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Previous Cities Searched</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cityButton">
+                    </tbody>
+                </table>
             </div>
             <div class="col-9">
                 <div id="currentWeather">
-                    <h2 id="cityName">test</h2>
-                    <p id="temp">test</p>
-                    <p id="humidity">test</p>
-                    <p id="wind">test</p>
-                    <p id="uv">test</p>
+                    <h2 id="cityName"></h2>
+                    <p id="temp"></p>
+                    <p id="humidity"></p>
+                    <p id="wind"></p>
+                    <p id="uv"></p>
                 </div>
                 <div id="forecast">
                     <h3>5-Day Forecast:</h3>
+                    <ul id=5DayForecast></ul>
                 </div>
             </div>
         </div>
