@@ -23,6 +23,7 @@ function getWeather(city) {
         tempEl.text('Temperature: ' + temp + '\xB0F');
         humidEl.text('Humidity: ' + weather.main.humidity + '%');
         windEl.text('Wind Speed: ' + weather.wind.speed + 'MPH');
+        $('#forecastHeader').text('5-Day Forecast:');
 
         var lon = weather.coord.lon;
         var lat = weather.coord.lat;
@@ -63,6 +64,7 @@ function getForecast(city) {
 }
 
 function addCityButton(city) {
+    $('#th').text('Previous Cities Searched');
     var newSearch = $('<tr id="previousSearch">');
     var cityButton = $('<button id="cityButton">').text(city);
     newSearch.append(cityButton);
