@@ -17,7 +17,6 @@ function getWeather(city) {
         method: 'GET',
     }).then(function (weatherResponse) {
         weather = weatherResponse;
-        console.log(weatherResponse);
         var temp = ((weather.main.temp - 273.15) * (9/5) + 32).toFixed(0);
         cityNameEl.text(weather.name + ' (' + date + ') ' + weather.weather[0].icon);
         tempEl.text('Temperature: ' + temp + '\xB0F');
@@ -44,20 +43,20 @@ function getForecast(city) {
         url: forecastURL,
         method: 'GET'
     }).then(function (forecastResponse) {
-        console.log(forecastResponse);
         var forecast = forecastResponse;
         // logic for getting 5 day forecast
         for (i = 2; i < forecast.list.length; i += 8) {
-            var card = $('<div class="col-2">');
+            var card = $('<div class="col-2" id="cardContainer">')
             var day = $('<h4>');
             var dayTemp = $('<p>');
             var dayHumidity = $('<p>');
-            tempK = forecast.list[i].main.temp;
-            day.text(forecast.list[i].dt);
-            dayTemp.text('Temp: ' + ((tempK - 273.15) * (9/5) + 32).toFixed(0));
+            var tempK = forecast.list[i].main.temp;
+            // var futureDate = forecast.list[i].dt;
+            // day.text(moment().format(futureDate, 'MM/DD/YYYY'));
+            dayTemp.text('Temp: ' + ((tempK - 273.15) * (9/5) + 32).toFixed(0) + '\xB0F');
             dayHumidity.text('Humidity: ' + forecast.list[i].main.humidity + '%');
             card.append(day, dayTemp, dayHumidity);
-            $('#forecast').append(card);
+            $('#forecastDisplay').append(card);
             console.log(i);
         }
     })
