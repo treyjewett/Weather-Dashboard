@@ -1,15 +1,24 @@
 // Setting global variables
 var date = moment().format('MM/DD/YYYY');
-
+var apiKey = '7719db6fa8f9f37f5cec7c50a9d6cc86';
 var cityNameEl = $('#cityName');
 var tempEl = $('#temp');
 var humidEl = $('#humidity');
 var windEl = $('#wind');
 var uvEl = $('#uv');
 
-var apiKey = '7719db6fa8f9f37f5cec7c50a9d6cc86';
+$('#btn').on('click', function () {
+    var city = $('#input').val();
+    addCityButton(city);
+    getWeather(city);
+})
 
-// create the function to fetch the weather at the current time.
+$('#previousSearch').on('click', function () {
+    var newCity = $('#cityButton');
+    getWeather(newCity);
+})
+
+// Create the function to get weather using ajax
 function getWeather(city) {
     var weatherURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey;
     $.ajax({
@@ -17,8 +26,11 @@ function getWeather(city) {
         method: 'GET',
     }).then(function (weatherResponse) {
         weather = weatherResponse;
-        var temp = ((weather.main.temp - 273.15) * (9/5) + 32).toFixed(0);
-        cityNameEl.text(weather.name + ' (' + date + ') ' + weather.weather[0].icon);
+        var temp = ((weather.main.temp - 273.15) * (9 / 5) + 32).toFixed(0);
+        // var date = new Date(weatherResponse.dt * 1000);
+        // var icon = weatherResponse.weather[0].icon;
+        // var iconSrc = 'https://openweathermap.org/img/wn/' + icon + '@2x.png';
+        cityNameEl.text(weather.name + ' (' + date + ')');
         tempEl.text('Temperature: ' + temp + '\xB0F');
         humidEl.text('Humidity: ' + weather.main.humidity + '%');
         windEl.text('Wind Speed: ' + weather.wind.speed + 'MPH');
@@ -32,12 +44,18 @@ function getWeather(city) {
             method: 'GET'
         }).then(function (uvResponse) {
             uvEl.text('UV Index: ' + uvResponse.value);
+            if (uvResponse.value < 3) {
+                $('#uv').attr('class', 'low');
+            } else if (uvResponse.value >= 3 && uvResponse.value <= 5) {
+                $('#uv').attr('class', 'moderate');
+            } else if (uvResponse.value > 5 && uvResponse.value <= 7) {
+                $('#uv').attr('class', 'high');
+            } else if (uvResponse.value > 7) {
+                $('#uv').attr('class', 'severe');
+            }
         })
     })
-}
 
-// create the funciton to fetch the weather forecast for the next 5 days.
-function getForecast(city) {
     var forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + apiKey;
     $.ajax({
         url: forecastURL,
@@ -45,7 +63,7 @@ function getForecast(city) {
     }).then(function (forecastResponse) {
         var forecast = forecastResponse;
         // logic for getting 5 day forecast
-        for (i = 2; i < forecast.list.length; i += 8) {
+        for (i = 3; i < forecast.list.length; i += 8) {
             var card = $('<div class="col-2" id="cardContainer">')
             var day = $('<h4>');
             var dayTemp = $('<p>');
@@ -53,10 +71,11 @@ function getForecast(city) {
             var tempK = forecast.list[i].main.temp;
             // var futureDate = forecast.list[i].dt;
             // day.text(moment().format(futureDate, 'MM/DD/YYYY'));
-            dayTemp.text('Temp: ' + ((tempK - 273.15) * (9/5) + 32).toFixed(0) + '\xB0F');
+            dayTemp.text('Temp: ' + ((tempK - 273.15) * (9 / 5) + 32).toFixed(0) + '\xB0F');
             dayHumidity.text('Humidity: ' + forecast.list[i].main.humidity + '%');
             card.append(day, dayTemp, dayHumidity);
             $('#forecastDisplay').append(card);
+            console.log(forecastResponse);
             console.log(i);
         }
     })
@@ -69,16 +88,3 @@ function addCityButton(city) {
     newSearch.append(cityButton);
     $('#cityButton').append(newSearch);
 }
-
-$('#btn').on('click', function () {
-    var city = $('#input').val();
-    addCityButton(city);
-    getWeather(city);
-    getForecast(city);
-})
-
-$('#previousSearch').on('click', function () {
-    var newCity = $('#cityButton');
-    getWeather(newCity);
-    getForecast(newCity);
-})
