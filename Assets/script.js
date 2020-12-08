@@ -59,7 +59,7 @@ function getWeather(city) {
         var forecast = forecastResponse;
         // logic for getting 5 day forecast
         // The forecast response gives weather every 3 hours. 24 / 3 = 8. Hence why increasing i by 8 each loop.
-        for (i = 2; i < forecast.list.length; i += 8) {
+        for (i = 0; i < forecast.list.length; i += 8) {
             // Create the elements to populate onto the page later.
             var card = $('<div class="col-2" id="cardContainer">');
             var day = $('<h4>');
