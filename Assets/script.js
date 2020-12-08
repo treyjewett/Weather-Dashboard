@@ -49,7 +49,7 @@ function getWeather(city) {
             }
         })
     })
-    
+
     var forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + apiKey;
     $.ajax({
         url: forecastURL,
@@ -79,34 +79,47 @@ function getWeather(city) {
     })
 }
 
-var citiesSearched = JSON.parse(localStorage.getItem('citiesSearched')) || {};
 
 // Create a listener for when the user clicks the search button.
-$('#btn').on('click', function () {
-    var city = $('#input').val();
-    citiesSearched = city;
-    localStorage.setItem('city', JSON.stringify(city));
+$('#btn').on('click', function (event) {
+    event.preventDefault();
+    var city = $('#input').val().trim();
+    var citiesSearched = JSON.parse(localStorage.getItem('citiesSearched'));
+    if (citiesSearched == null) {
+        citiesSearched = [];
+    }
+    citiesSearched.push(city);
+    var citiesPast = localStorage.setItem('citiesSearched', JSON.stringify(citiesSearched));
     addCityButton(city);
     getWeather(city);
-})
-
-// Create a listener for when the user click one of the previously searched buttons.
-$('#previousSearch').on('click', function () {
-    city = $('#cityButton');
-    getWeather(newCity);
 })
 
 // Create the new cityButtons once the user has searched for a city.
 function addCityButton(city) {
     $('#th').text('Previous Cities Searched');
     var newSearch = $('<tr id="previousSearch">');
-    var cityButton = $('<button id="cityButton">').text(city);
+    var cityButton = $('<button id=' + city + ' class=btn>').text(city);
     newSearch.append(cityButton);
+    cityButton.on('click', function () {
+        getWeather(city);
+    })
     $('#cityButton').append(newSearch);
 }
 
-for (i = 0; i < citiesSearched.length; i++) {
-    if (citiesSearched[i] != null) {
-        addCityButton(citiesSearched[i].text);
+// Populate the buttons from local storage on load
+window.onload = function () {
+    var citiesPast = JSON.parse(localStorage.getItem('citiesSearched'));
+    if (citiesPast == null) {
+        citiesPast = [];
+    }
+
+    for (i = 0; i < citiesPast.length; i++) {
+        if (citiesPast[i] != null) {
+            addCityButton(citiesPast[i]);
+        }
+    }
+
+    if (citiesPast.length > 0) {
+        getWeather(citiesPast[0]);
     }
 }
