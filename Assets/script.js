@@ -39,13 +39,13 @@ function getWeather(city) {
             uvEl.text('UV Index: ' + uvResponse.value);
             // Create the logic behind the coloring of the uv indexes.
             if (uvResponse.value < 3) {
-                $('#uvRating').attr('class', 'low');
+                $('#uv').attr('class', 'low');
             } else if (uvResponse.value >= 3 && uvResponse.value <= 5) {
-                $('#uvRating').attr('class', 'moderate');
+                $('#uv').attr('class', 'moderate');
             } else if (uvResponse.value > 5 && uvResponse.value <= 7) {
-                $('#uvRating').attr('class', 'high');
+                $('#uv').attr('class', 'high');
             } else if (uvResponse.value > 7) {
-                $('#uvRating').attr('class', 'severe');
+                $('#uv').attr('class', 'severe');
             }
         })
     })
