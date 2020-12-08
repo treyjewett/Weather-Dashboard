@@ -16,16 +16,19 @@ function getWeather(city) {
         method: 'GET',
     }).then(function (weatherResponse) {
         weather = weatherResponse;
+        // Convert the temperature variable given from kelvin to fahrenheit
         var temp = ((weather.main.temp - 273.15) * (9 / 5) + 32).toFixed(0);
+        // Get the weather icon from the response
         var icon = weatherResponse.weather[0].icon;
         var iconSrc = 'https://openweathermap.org/img/wn/' + icon + '@2x.png';
+        // Now populate the page.
         cityNameEl.text(weather.name + ' (' + date + ')');
         cityNameEl.append('<img id="icon" src= \'' + iconSrc + '\'/>');
         tempEl.text('Temperature: ' + temp + '\xB0F');
         humidEl.text('Humidity: ' + weather.main.humidity + '%');
         windEl.text('Wind Speed: ' + weather.wind.speed + 'MPH');
         $('#forecastHeader').text('5-Day Forecast:');
-        
+        // Set lat and lon variables from weatherResponse to be used in the uvResponse.
         var lon = weather.coord.lon;
         var lat = weather.coord.lat;
         var uvURL = 'https://api.openweathermap.org/data/2.5/uvi?lat=' + lat + '&lon=' + lon + '&appid=' + apiKey;
@@ -34,14 +37,15 @@ function getWeather(city) {
             method: 'GET'
         }).then(function (uvResponse) {
             uvEl.text('UV Index: ' + uvResponse.value);
+            // Create the logic behind the coloring of the uv indexes.
             if (uvResponse.value < 3) {
-                $('#uv').attr('class', 'low');
+                $('#uvRating').attr('class', 'low');
             } else if (uvResponse.value >= 3 && uvResponse.value <= 5) {
-                $('#uv').attr('class', 'moderate');
+                $('#uvRating').attr('class', 'moderate');
             } else if (uvResponse.value > 5 && uvResponse.value <= 7) {
-                $('#uv').attr('class', 'high');
+                $('#uvRating').attr('class', 'high');
             } else if (uvResponse.value > 7) {
-                $('#uv').attr('class', 'severe');
+                $('#uvRating').attr('class', 'severe');
             }
         })
     })
@@ -54,7 +58,9 @@ function getWeather(city) {
         $('#forecastDisplay').empty();
         var forecast = forecastResponse;
         // logic for getting 5 day forecast
-        for (i = 3; i < forecast.list.length; i += 8) {
+        // The forecast response gives weather every 3 hours. 24 / 3 = 8. Hence why increasing i by 8 each loop.
+        for (i = 2; i < forecast.list.length; i += 8) {
+            // Create the elements to populate onto the page later.
             var card = $('<div class="col-2" id="cardContainer">');
             var day = $('<h4>');
             var dayTemp = $('<p>');
@@ -63,6 +69,7 @@ function getWeather(city) {
             var dateTime = forecast.list[i].dt;
             var formattedDate = moment.unix(dateTime).format('MM/DD/YYYY');
             var iconSrc = 'https://openweathermap.org/img/wn/' + forecastResponse.list[i].weather[0].icon + '@2x.png';
+            // Now populate the page.
             day.text(formattedDate);
             dayTemp.text('Temp: ' + ((tempK - 273.15) * (9 / 5) + 32).toFixed(0) + '\xB0F');
             dayHumidity.text('Humidity: ' + forecast.list[i].main.humidity + '%');
@@ -74,21 +81,32 @@ function getWeather(city) {
 
 var citiesSearched = JSON.parse(localStorage.getItem('citiesSearched')) || {};
 
+// Create a listener for when the user clicks the search button.
 $('#btn').on('click', function () {
     var city = $('#input').val();
+    citiesSearched = city;
+    localStorage.setItem('city', JSON.stringify(city));
     addCityButton(city);
     getWeather(city);
 })
 
+// Create a listener for when the user click one of the previously searched buttons.
 $('#previousSearch').on('click', function () {
-    var newCity = $('#cityButton');
+    city = $('#cityButton');
     getWeather(newCity);
 })
 
+// Create the new cityButtons once the user has searched for a city.
 function addCityButton(city) {
     $('#th').text('Previous Cities Searched');
     var newSearch = $('<tr id="previousSearch">');
     var cityButton = $('<button id="cityButton">').text(city);
     newSearch.append(cityButton);
     $('#cityButton').append(newSearch);
+}
+
+for (i = 0; i < citiesSearched.length; i++) {
+    if (citiesSearched[i] != null) {
+        addCityButton(citiesSearched[i].text);
+    }
 }
