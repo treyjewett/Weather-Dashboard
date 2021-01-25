@@ -79,7 +79,6 @@ function getWeather(city) {
     })
 }
 
-
 // Create a listener for when the user clicks the search button.
 $('#btn').on('click', function (event) {
     event.preventDefault();
@@ -88,7 +87,7 @@ $('#btn').on('click', function (event) {
     if (citiesSearched == null) {
         citiesSearched = [];
     }
-    citiesSearched.push(city);
+    citiesSearched.unshift(city);
     var citiesPast = localStorage.setItem('citiesSearched', JSON.stringify(citiesSearched));
     addCityButton(city);
     getWeather(city);
@@ -103,12 +102,13 @@ function addCityButton(city) {
     cityButton.on('click', function () {
         getWeather(city);
     })
-    $('#cityButton').append(newSearch);
+    $('#cityButton').prepend(newSearch);
 }
 
 // Populate the buttons from local storage on load
 window.onload = function () {
     var citiesPast = JSON.parse(localStorage.getItem('citiesSearched'));
+    console.log(citiesPast);
     if (citiesPast == null) {
         citiesPast = [];
     }
